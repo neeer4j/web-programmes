@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>JavaScript String Functions</title>
+</head>
+<body>
+<p><a href="stringmaths.html">String Functions</a> | <a href="mathsjs.html">Math Functions</a></p>
+<h1 align="center">JavaScript String Object Functions</h1>
+<p align="center">Select a function and enter the required values.</p>
+<table border="1" cellpadding="8" width="80%" align="center">
+	<tr><td>
+			<label for="stringFunction"><b>Select a string function:</b></label>
+			<select id="stringFunction"></select>
+			<div id="stringInputs"></div>
+			<p class="description" id="stringDescription"></p>
+			<button type="button" id="runString">Run function</button>
+	</td></tr>
+	<tr><td><b>Expression:</b> <span id="stringExpression">Your expression will appear here.</span></td></tr>
+	<tr><td><b>Result:</b> <pre id="stringResult">Select a function and enter a value.</pre></td></tr>
+</table>
+<script>
+	const stringFunctions = {
+		charAt: { description: 'Returns the character at a specified index.', fields: ['Text', 'Index'], run: (text, index) => text.charAt(Number(index)), expression: (text, index) => `${JSON.stringify(text)}.charAt(${index})` },
+		concat: { description: 'Joins the original string with one or more strings.', fields: ['First string', 'Second string'], run: (first, second) => first.concat(second), expression: (first, second) => `${JSON.stringify(first)}.concat(${JSON.stringify(second)})` },
+		includes: { description: 'Checks whether a string contains another string and returns true or false.', fields: ['Text', 'Search value'], run: (text, search) => text.includes(search), expression: (text, search) => `${JSON.stringify(text)}.includes(${JSON.stringify(search)})` },
+		indexOf: { description: 'Returns the first index at which a value occurs, or -1 if it is absent.', fields: ['Text', 'Search value'], run: (text, search) => text.indexOf(search), expression: (text, search) => `${JSON.stringify(text)}.indexOf(${JSON.stringify(search)})` },
+		replace: { description: 'Returns a new string with the first matching value replaced.', fields: ['Text', 'Find value', 'Replacement'], run: (text, find, replacement) => text.replace(find, replacement), expression: (text, find, replacement) => `${JSON.stringify(text)}.replace(${JSON.stringify(find)}, ${JSON.stringify(replacement)})` },
+		slice: { description: 'Extracts a section of a string between two indexes.', fields: ['Text', 'Start index', 'End index'], run: (text, start, end) => text.slice(Number(start), Number(end)), expression: (text, start, end) => `${JSON.stringify(text)}.slice(${start}, ${end})` },
+		toLowerCase: { description: 'Converts all alphabetic characters to lowercase.', fields: ['Text'], run: text => text.toLowerCase(), expression: text => `${JSON.stringify(text)}.toLowerCase()` },
+		toUpperCase: { description: 'Converts all alphabetic characters to uppercase.', fields: ['Text'], run: text => text.toUpperCase(), expression: text => `${JSON.stringify(text)}.toUpperCase()` },
+		trim: { description: 'Removes whitespace from both ends of a string.', fields: ['Text'], run: text => text.trim(), expression: text => `${JSON.stringify(text)}.trim()` }
+	};
+	const functionSelect = document.getElementById('stringFunction');
+	const inputArea = document.getElementById('stringInputs');
+	functionSelect.innerHTML = Object.keys(stringFunctions).map(name => `<option value="${name}">${name}()</option>`).join('');
+	function renderStringInputs() {
+		const item = stringFunctions[functionSelect.value];
+		inputArea.innerHTML = item.fields.map((field, index) => `<div class="field"><label for="stringInput${index}">${field}</label><input id="stringInput${index}" type="text" ${index === 0 ? 'value="Hello JavaScript"' : ''}></div>`).join('');
+		document.getElementById('stringDescription').textContent = item.description;
+	}
+	function runStringFunction() {
+		const item = stringFunctions[functionSelect.value];
+		const values = item.fields.map((_, index) => document.getElementById(`stringInput${index}`).value);
+		document.getElementById('stringExpression').textContent = item.expression(...values);
+		document.getElementById('stringResult').textContent = String(item.run(...values));
+	}
+	functionSelect.addEventListener('change', renderStringInputs);
+	document.getElementById('runString').addEventListener('click', runStringFunction);
+	renderStringInputs();
+</script>
+</body>
+</html>
