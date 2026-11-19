@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Math Functions</title>
+</head>
+<body>
+<p><a href="stringmaths.html">String Functions</a> | <a href="mathsjs.html">Math Functions</a></p>
+<h1 align="center">JavaScript Math Object Functions</h1>
+<p align="center">Select a function and enter the required values.</p>
+<table border="1" cellpadding="8" width="80%" align="center">
+    <tr><td>
+            <label for="mathFunction"><b>Select a Math function:</b></label>
+            <select id="mathFunction"></select>
+            <div id="mathInputs"></div>
+            <p class="description" id="mathDescription"></p>
+            <button type="button" id="runMath">Run function</button>
+    </td></tr>
+    <tr><td><b>Expression:</b> <span id="mathExpression">Your expression will appear here.</span></td></tr>
+    <tr><td><b>Result:</b> <pre id="mathResult">Select a function and enter a value.</pre></td></tr>
+</table>
+<script>
+    const mathFunctions = {
+        abs: { description: 'Returns the absolute (non-negative) value of a number.', fields: ['Number'], run: value => Math.abs(Number(value)), expression: value => `Math.abs(${value})` },
+        ceil: { description: 'Rounds a number upward to the next integer.', fields: ['Number'], run: value => Math.ceil(Number(value)), expression: value => `Math.ceil(${value})` },
+        floor: { description: 'Rounds a number downward to the previous integer.', fields: ['Number'], run: value => Math.floor(Number(value)), expression: value => `Math.floor(${value})` },
+        max: { description: 'Returns the largest value from the supplied numbers.', fields: ['First number', 'Second number'], run: (first, second) => Math.max(Number(first), Number(second)), expression: (first, second) => `Math.max(${first}, ${second})` },
+        min: { description: 'Returns the smallest value from the supplied numbers.', fields: ['First number', 'Second number'], run: (first, second) => Math.min(Number(first), Number(second)), expression: (first, second) => `Math.min(${first}, ${second})` },
+        pow: { description: 'Returns a base number raised to a specified exponent.', fields: ['Base', 'Exponent'], run: (base, exponent) => Math.pow(Number(base), Number(exponent)), expression: (base, exponent) => `Math.pow(${base}, ${exponent})` },
+        random: { description: 'Returns a pseudo-random number greater than or equal to 0 and less than 1.', fields: [], run: () => Math.random(), expression: () => 'Math.random()' },
+        round: { description: 'Rounds a number to the nearest integer.', fields: ['Number'], run: value => Math.round(Number(value)), expression: value => `Math.round(${value})` },
+        sqrt: { description: 'Returns the positive square root of a number.', fields: ['Number'], run: value => Math.sqrt(Number(value)), expression: value => `Math.sqrt(${value})` }
+    };
+    const functionSelect = document.getElementById('mathFunction');
+    const inputArea = document.getElementById('mathInputs');
+    functionSelect.innerHTML = Object.keys(mathFunctions).map(name => `<option value="${name}">Math.${name}()</option>`).join('');
+    function renderMathInputs() {
+        const item = mathFunctions[functionSelect.value];
+        inputArea.innerHTML = item.fields.map((field, index) => `<div class="field"><label for="mathInput${index}">${field}</label><input id="mathInput${index}" type="text" value="${index === 0 ? (item.fields.length > 1 ? '12' : '12.6') : '3'}"></div>`).join('');
+        document.getElementById('mathDescription').textContent = item.description;
+    }
+    function runMathFunction() {
+        const item = mathFunctions[functionSelect.value];
+        const values = item.fields.map((_, index) => document.getElementById(`mathInput${index}`).value);
+        document.getElementById('mathExpression').textContent = item.expression(...values);
+        document.getElementById('mathResult').textContent = String(item.run(...values));
+    }
+    functionSelect.addEventListener('change', renderMathInputs);
+    document.getElementById('runMath').addEventListener('click', runMathFunction);
+    renderMathInputs();
+</script>
+</body>
+</html>
